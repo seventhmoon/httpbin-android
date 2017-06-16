@@ -1,5 +1,6 @@
 package com.androidfung.httpbin.http;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -15,6 +16,16 @@ public class ServicesManager {
     public static HttpBinService getHttpBinService(){
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(HttpBinService.class);
+    }
+
+
+    public static HttpBinService getHttpBinService(OkHttpClient client){
+        return new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(HttpBinService.class);

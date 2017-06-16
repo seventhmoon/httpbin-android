@@ -21,6 +21,7 @@ import com.google.gson.GsonBuilder;
 
 import java.util.Map;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,6 +36,7 @@ public class ScrollingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mGson = new GsonBuilder().setPrettyPrinting().create();
+
         ActivityScrollingBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_scrolling);
 //        mBindingData = new BindingData();
 
@@ -50,8 +52,7 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void testService(){
-        HttpBinService httpBinService = ServicesManager.getHttpBinService();
-
+        HttpBinService httpBinService = ServicesManager.getHttpBinService(new OkHttpClient());
         httpBinService.get().enqueue(new Callback<Map<String, Object>>() {
             @Override
             public void onResponse(@NonNull Call<Map<String, Object>> call, @NonNull Response<Map<String, Object>> response) {
