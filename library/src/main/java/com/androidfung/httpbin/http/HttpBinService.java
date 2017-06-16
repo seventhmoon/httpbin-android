@@ -1,7 +1,5 @@
 package com.androidfung.httpbin.http;
 
-import com.androidfung.httpbin.http.model.GetResponse;
-
 import java.util.Map;
 
 import retrofit2.Call;

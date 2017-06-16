@@ -4,6 +4,7 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,7 +26,7 @@ import retrofit2.Response;
 
 public class ScrollingActivity extends AppCompatActivity {
 
-    private static String TAG = ScrollingActivity.class.getSimpleName();
+    private static final String TAG = ScrollingActivity.class.getSimpleName();
     private BindingData mBindingData;
     private Gson mGson;
 
@@ -52,14 +53,15 @@ public class ScrollingActivity extends AppCompatActivity {
 
         httpBinService.get().enqueue(new Callback<Map<String, Object>>() {
             @Override
-            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
-                Log.d(TAG, response.body().toString());
-                mBindingData.setResponseGet(mGson.toJson(response.body()));
+            public void onResponse(@NonNull Call<Map<String, Object>> call, @NonNull Response<Map<String, Object>> response) {
+                String prettyString = mGson.toJson(response.body());
+                Log.d(TAG, prettyString);
+                mBindingData.setResponseGet(prettyString);
 
             }
 
             @Override
-            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+            public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {
                 Log.d(TAG, t.toString());
             }
 
@@ -67,14 +69,14 @@ public class ScrollingActivity extends AppCompatActivity {
 
         httpBinService.post().enqueue(new Callback<Map<String, Object>>() {
             @Override
-            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
-                Log.d(TAG, response.body().toString());
-
-                mBindingData.setResponsePost(mGson.toJson(response.body()));
+            public void onResponse(@NonNull Call<Map<String, Object>> call, @NonNull Response<Map<String, Object>> response) {
+                String prettyString = mGson.toJson(response.body());
+                Log.d(TAG, prettyString);
+                mBindingData.setResponsePost(prettyString);
             }
 
             @Override
-            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+            public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {
                 Log.d(TAG, t.toString());
             }
         });
@@ -112,7 +114,7 @@ public class ScrollingActivity extends AppCompatActivity {
             return mResponseGet;
         }
 
-        public void setResponseGet(String responseGet) {
+        void setResponseGet(String responseGet) {
             this.mResponseGet = responseGet;
             notifyPropertyChanged(BR.responseGet);
         }
@@ -123,7 +125,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         }
 
-        public void setResponsePost(String responsePost) {
+        void setResponsePost(String responsePost) {
             this.mResponsePost = responsePost;
             notifyPropertyChanged(BR.responsePost);
         }
