@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Created by funglam on 6/13/17.
  */
-
+@Deprecated
 public class GetResponse {
 
     @SerializedName("args")

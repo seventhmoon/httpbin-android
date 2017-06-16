@@ -1,5 +1,8 @@
 package com.androidfung.httpbin;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -8,8 +11,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.androidfung.httpbin.databinding.ActivityScrollingBinding;
 import com.androidfung.httpbin.http.HttpBinService;
 import com.androidfung.httpbin.http.ServicesManager;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.Map;
 
 import retrofit2.Call;
@@ -19,16 +26,25 @@ import retrofit2.Response;
 public class ScrollingActivity extends AppCompatActivity {
 
     private static String TAG = ScrollingActivity.class.getSimpleName();
+    private BindingData mBindingData;
+    private Gson mGson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scrolling);
+        mGson = new GsonBuilder().setPrettyPrinting().create();
+        ActivityScrollingBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_scrolling);
+        mBindingData = new BindingData();
+
+        binding.setBindingData(mBindingData);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> testService());
+
+        testService();
     }
 
     private void testService(){
@@ -38,6 +54,8 @@ public class ScrollingActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                 Log.d(TAG, response.body().toString());
+                mBindingData.setResponseGet(mGson.toJson(response.body()));
+
             }
 
             @Override
@@ -51,6 +69,8 @@ public class ScrollingActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
                 Log.d(TAG, response.body().toString());
+
+                mBindingData.setResponsePost(mGson.toJson(response.body()));
             }
 
             @Override
@@ -64,7 +84,7 @@ public class ScrollingActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_scrolling, menu);
+//        getMenuInflater().inflate(R.menu.menu_scrolling, menu);
         return true;
     }
 
@@ -80,5 +100,32 @@ public class ScrollingActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public static class BindingData extends BaseObservable{
+
+        private String mResponseGet = "Loading...";
+        private String mResponsePost = "Loading...";
+
+        @Bindable
+        public String getResponseGet() {
+            return mResponseGet;
+        }
+
+        public void setResponseGet(String responseGet) {
+            this.mResponseGet = responseGet;
+            notifyPropertyChanged(BR.responseGet);
+        }
+
+        @Bindable
+        public String getResponsePost() {
+            return mResponsePost;
+
+        }
+
+        public void setResponsePost(String responsePost) {
+            this.mResponsePost = responsePost;
+            notifyPropertyChanged(BR.responsePost);
+        }
     }
 }
