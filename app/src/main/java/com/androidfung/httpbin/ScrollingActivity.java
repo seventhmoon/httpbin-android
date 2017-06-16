@@ -2,6 +2,7 @@ package com.androidfung.httpbin;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableArrayMap;
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -11,7 +12,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.androidfung.httpbin.databinding.ActivityScrollingBinding;
 import com.androidfung.httpbin.http.HttpBinService;
 import com.androidfung.httpbin.http.ServicesManager;
 import com.google.gson.Gson;
@@ -19,6 +19,7 @@ import com.google.gson.GsonBuilder;
 
 import java.util.Map;
 
+import hugo.weaving.DebugLog;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,13 +33,14 @@ public class ScrollingActivity extends AppCompatActivity {
     private Gson mGson;
 
     @Override
+    @DebugLog
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mGson = new GsonBuilder().setPrettyPrinting().create();
         mOkhttpClient = new OkHttpClient();
 
-        ActivityScrollingBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_scrolling);
-        binding.setBindingData(mResultMap);
+        ViewDataBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_scrolling);
+        binding.setVariable(BR.bindingData, mResultMap);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
