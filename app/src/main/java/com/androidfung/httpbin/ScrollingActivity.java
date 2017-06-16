@@ -1,7 +1,5 @@
 package com.androidfung.httpbin;
 
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableArrayMap;
 import android.os.Bundle;
@@ -30,16 +28,16 @@ public class ScrollingActivity extends AppCompatActivity {
 
     private static final String TAG = ScrollingActivity.class.getSimpleName();
     private ObservableArrayMap<String, Object> mResultMap = new ObservableArrayMap<>();
+    private OkHttpClient mOkhttpClient;
     private Gson mGson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mGson = new GsonBuilder().setPrettyPrinting().create();
+        mOkhttpClient = new OkHttpClient();
 
         ActivityScrollingBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_scrolling);
-//        mBindingData = new BindingData();
-
         binding.setBindingData(mResultMap);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -52,14 +50,13 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void testService(){
-        HttpBinService httpBinService = ServicesManager.getHttpBinService(new OkHttpClient());
+        HttpBinService httpBinService = ServicesManager.getHttpBinService(mOkhttpClient);
         httpBinService.get().enqueue(new Callback<Map<String, Object>>() {
             @Override
             public void onResponse(@NonNull Call<Map<String, Object>> call, @NonNull Response<Map<String, Object>> response) {
                 String prettyString = mGson.toJson(response.body());
                 Log.d(TAG, prettyString);
-//                mBindingData.setResponseGet(prettyString);
-                    mResultMap.put("/get", prettyString);
+                mResultMap.put("/get", prettyString);
             }
 
             @Override
@@ -74,7 +71,6 @@ public class ScrollingActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<Map<String, Object>> call, @NonNull Response<Map<String, Object>> response) {
                 String prettyString = mGson.toJson(response.body());
                 Log.d(TAG, prettyString);
-//                mBindingData.setResponsePost(prettyString);
                 mResultMap.put("/post", prettyString);
             }
 
