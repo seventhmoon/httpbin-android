@@ -3,6 +3,7 @@ package com.androidfung.httpbin;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.DataBindingUtil;
+import android.databinding.ObservableArrayMap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -27,7 +28,7 @@ import retrofit2.Response;
 public class ScrollingActivity extends AppCompatActivity {
 
     private static final String TAG = ScrollingActivity.class.getSimpleName();
-    private BindingData mBindingData;
+    private ObservableArrayMap<String, Object> mResultMap = new ObservableArrayMap<>();
     private Gson mGson;
 
     @Override
@@ -35,9 +36,9 @@ public class ScrollingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mGson = new GsonBuilder().setPrettyPrinting().create();
         ActivityScrollingBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_scrolling);
-        mBindingData = new BindingData();
+//        mBindingData = new BindingData();
 
-        binding.setBindingData(mBindingData);
+        binding.setBindingData(mResultMap);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -56,8 +57,8 @@ public class ScrollingActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<Map<String, Object>> call, @NonNull Response<Map<String, Object>> response) {
                 String prettyString = mGson.toJson(response.body());
                 Log.d(TAG, prettyString);
-                mBindingData.setResponseGet(prettyString);
-
+//                mBindingData.setResponseGet(prettyString);
+                    mResultMap.put("/get", prettyString);
             }
 
             @Override
@@ -72,7 +73,8 @@ public class ScrollingActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<Map<String, Object>> call, @NonNull Response<Map<String, Object>> response) {
                 String prettyString = mGson.toJson(response.body());
                 Log.d(TAG, prettyString);
-                mBindingData.setResponsePost(prettyString);
+//                mBindingData.setResponsePost(prettyString);
+                mResultMap.put("/post", prettyString);
             }
 
             @Override
@@ -104,30 +106,4 @@ public class ScrollingActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class BindingData extends BaseObservable{
-
-        private String mResponseGet = "Loading...";
-        private String mResponsePost = "Loading...";
-
-        @Bindable
-        public String getResponseGet() {
-            return mResponseGet;
-        }
-
-        void setResponseGet(String responseGet) {
-            this.mResponseGet = responseGet;
-            notifyPropertyChanged(BR.responseGet);
-        }
-
-        @Bindable
-        public String getResponsePost() {
-            return mResponsePost;
-
-        }
-
-        void setResponsePost(String responsePost) {
-            this.mResponsePost = responsePost;
-            notifyPropertyChanged(BR.responsePost);
-        }
-    }
 }

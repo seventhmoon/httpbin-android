@@ -5,10 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
-
-        <variable
-            name="bindingData"
-            type="com.androidfung.httpbin.ScrollingActivity.BindingData" />
+        <import type="android.databinding.ObservableMap"/>
+        <variable name="bindingData" type="ObservableMap&lt;String, Object&gt;"/>
     </data>
 <android.support.design.widget.CoordinatorLayout
     android:layout_width="match_parent"
