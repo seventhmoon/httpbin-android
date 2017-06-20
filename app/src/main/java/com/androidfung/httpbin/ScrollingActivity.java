@@ -53,6 +53,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
     private void testService(){
         HttpBinService httpBinService = ServicesManager.getHttpBinService(mOkhttpClient);
+
         httpBinService.get().enqueue(new Callback<Map<String, Object>>() {
             @Override
             public void onResponse(@NonNull Call<Map<String, Object>> call, @NonNull Response<Map<String, Object>> response) {
@@ -65,7 +66,20 @@ public class ScrollingActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {
                 Log.d(TAG, t.toString());
             }
+        });
 
+        httpBinService.ip().enqueue(new Callback<Map<String, Object>>() {
+            @Override
+            public void onResponse(@NonNull Call<Map<String, Object>> call, @NonNull Response<Map<String, Object>> response) {
+                String prettyString = mGson.toJson(response.body());
+                Log.d(TAG, prettyString);
+                mResultMap.put("/ip", prettyString);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {
+                Log.d(TAG, t.toString());
+            }
         });
 
         httpBinService.post().enqueue(new Callback<Map<String, Object>>() {

@@ -17,4 +17,7 @@ public interface HttpBinService {
 
     @POST("post")
     Call<Map<String, Object>> post();
+
+    @GET("ip")
+    Call<Map<String, Object>> ip();
 }
