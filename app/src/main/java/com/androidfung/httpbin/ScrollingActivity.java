@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.androidfung.httpbin.http.HttpBinService;
 import com.androidfung.httpbin.http.ServicesManager;
@@ -40,7 +41,7 @@ public class ScrollingActivity extends AppCompatActivity {
         mOkhttpClient = new OkHttpClient();
 
         ViewDataBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_scrolling);
-        binding.setVariable(BR.bindingData, mResultMap);
+        binding.setVariable(com.androidfung.httpbin.BR.bindingData, mResultMap);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -64,7 +65,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {
-                Log.d(TAG, t.toString());
+                 printError(t);
             }
         });
 
@@ -78,8 +79,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {
-                Log.d(TAG, t.toString());
-            }
+                printError(t);            }
         });
 
         httpBinService.post().enqueue(new Callback<Map<String, Object>>() {
@@ -92,31 +92,16 @@ public class ScrollingActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<Map<String, Object>> call, @NonNull Throwable t) {
-                Log.d(TAG, t.toString());
+                printError(t);
             }
         });
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_scrolling, menu);
-        return true;
+    private void printError(Throwable throwable){
+        Log.d(TAG, throwable.toString());
+        Toast.makeText(this, throwable.toString(), Toast.LENGTH_LONG).show();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
 }
